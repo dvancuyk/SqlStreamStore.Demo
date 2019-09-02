@@ -6,14 +6,16 @@ namespace SqlStreamStore.Demo
 {
     static class Program
     {
-        private static InMemoryStreamStore _streamStore;
+        private static IStreamStore _streamStore;
         private static Account _account;
         private static BalanceProjection _balanceProjection;
+        private static string _connectionString = "Server=.;Database=sqlstreamdemo;Trusted_Connection=True;";
 
         static async Task Main()
         {
             var streamId = new StreamId($"Account:{Guid.NewGuid()}");
             _streamStore = new InMemoryStreamStore();
+            _streamStore = new SqlStreamStore.MsSqlStreamStore(new MsSqlStreamStoreSettings(_connectionString));
             _account = new Account(_streamStore, streamId);
             _balanceProjection = new BalanceProjection(_streamStore, streamId);
                 
